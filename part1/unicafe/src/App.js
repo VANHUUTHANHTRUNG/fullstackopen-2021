@@ -23,6 +23,23 @@ const App = () => {
             setFunction(stateValue + 1);
         };
     };
+
+    if (good === 0 && bad === 0 && neutral === 0) {
+        return (
+            <div>
+                <h1>Give feedback</h1>
+                <Button text="Good" handleClick={handleClick(good, setGood)} />
+                <Button
+                    text="Neutral"
+                    handleClick={handleClick(neutral, setNeutral)}
+                />
+                <Button text="Bad" handleClick={handleClick(bad, setBad)} />
+            <br/>
+            <h1>Statistics</h1>
+            <p>No feedback given</p>
+            </div>
+        );
+    }
     return (
         <div>
             <h1>Give feedback</h1>
@@ -43,8 +60,8 @@ const App = () => {
                 value={(good - bad) / (good + bad + neutral)}
             />
             <Statistics
-                text="All"
-                value={good / (good + bad + neutral)}
+                text="Percentage"
+                value={good * 100 / (good + bad + neutral)}
                 postfix="%"
             />
         </div>

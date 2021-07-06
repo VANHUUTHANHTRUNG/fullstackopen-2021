@@ -1,10 +1,10 @@
 import React from "react";
 // user define components
 
-const Part = (props) => {
+const Part = ({ name, exercises }) => {
     return (
         <p>
-            {props.name} {props.exercise}
+            {name} {exercises}
         </p>
     );
 };
@@ -20,8 +20,8 @@ const Header = (props) => {
 const Content = (props) => {
     return (
         <>
-            {props.parts.map((part) => (
-                <Part name={part.name} exercise={part.exercise} />
+            {props.parts.map(({ name, exercises }) => (
+                <Part name={name} exercises={exercises} />
             ))}
         </>
     );
@@ -33,7 +33,7 @@ const Total = (props) => {
             <p>
                 Number of exercises{" "}
                 {props.parts.reduce(
-                    (result, part) => result + part.exercise,
+                    (result, part) => result + part.exercises,
                     0
                 )}
             </p>
@@ -44,9 +44,9 @@ const Total = (props) => {
 const App = () => {
     const course = "Half Stack application development";
     const parts = [
-        { name: "Fundamentals of React", exercise: 10 },
-        { name: "Using props to pass data", exercise: 7 },
-        { name: "State of a component", exercise: 14 },
+        { name: "Fundamentals of React", exercises: 10 },
+        { name: "Using props to pass data", exercises: 7 },
+        { name: "State of a component", exercises: 14 },
     ];
 
     return (

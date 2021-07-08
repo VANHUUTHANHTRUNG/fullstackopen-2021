@@ -5,14 +5,14 @@ import Persons from "./components/Persons";
 import Filter from "./components/Filter";
 const App = () => {
     const [persons, setPersons] = useState([]);
-    useEffect(() => {
-        console.log("Start useEffect");
-        axios.get("http://localhost:3001/persons").then((response) => {
-            console.log("promise fullfilled");
+    useEffect(()=>{
+        console.log('Start useEffect')
+        axios.get('http://localhost:3001/persons').then(response=>{
+            console.log('promise fullfilled')
             setPersons(response.data);
-        });
-    }, []);
-    console.log("useEffect ends");
+        })
+    },[])
+    console.log('useEffect ends')
     const [filter, setFilter] = useState("");
 
     const handleSubmit = ({ name, number }) => {
@@ -39,3 +39,4 @@ const App = () => {
 };
 
 export default App;
+

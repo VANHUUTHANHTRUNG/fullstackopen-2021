@@ -1,3 +1,16 @@
+# City Weather Querying #
+React project fetching from API of 2 sites (Registration required):
+ - For countries information: [rescountries.eu](https://restcountries.eu)
+ - For weather of a single capital: [weatherstack.com](https://weatherstack.com/)
+
+# Result
+Project running as expected
+
+![Alt Passed_case](https://github.com/VANHUUTHANHTRUNG/fullstackopen-2021/blob/main/part2/countries/Passed_Case.png)
+
+Error notifying added
+![Alt API_expired_case](https://github.com/VANHUUTHANHTRUNG/fullstackopen-2021/blob/main/part2/countries/API_expired_case.png)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -1,25 +1,60 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import PersonForm from "./components/PersonForm";
-import Persons from "./components/Persons";
+import PersonsView from "./components/PersonsView";
 import Filter from "./components/Filter";
+import Persons from "./services/Persons";
 const App = () => {
     const [persons, setPersons] = useState([]);
-    useEffect(()=>{
-        console.log('Start useEffect')
-        axios.get('http://localhost:3001/persons').then(response=>{
-            console.log('promise fullfilled')
-            setPersons(response.data);
-        })
-    },[])
-    console.log('useEffect ends')
+    useEffect(() => {
+        Persons.getAll().then((initialPersons) => {
+            setPersons(initialPersons);
+        });
+    }, []);
     const [filter, setFilter] = useState("");
 
-    const handleSubmit = ({ name, number }) => {
-        if (persons.map((person) => person.name).includes(name)) {
-            window.alert(`${name} is already added to phonebook`);
+    const handleSubmit = (submittedPerson) => {
+        const { name } = submittedPerson;
+        const foundPerson = persons.find(person=>person.name === name);
+        if (foundPerson !== undefined) {
+            if (
+                window.confirm(
+                    `${name} is already added to phonebook, update a new number?`
+                )
+            ) {
+                Persons.updatePerson(foundPerson.id, submittedPerson).then(
+                    (updatedPerson) =>
+                        setPersons(
+                            persons.map((person) =>
+                                person.name !== updatedPerson.name
+                                    ? person
+                                    : updatedPerson
+                            )
+                        )
+                );
+            }
         } else {
-            setPersons(persons.concat({ name: name, number: number }));
+            Persons.addPerson(submittedPerson).then((addedPerson) =>
+                setPersons([...persons, addedPerson])
+            );
+        }
+    };
+
+    const handleRemove = (removedPerson) => {
+        const removedPersonID = persons.find(
+            (person) => person === removedPerson
+        ).id;
+
+        if (
+            removedPersonID !== undefined &&
+            window.confirm(`Delete ${removedPerson.name} ?`)
+        ) {
+            Persons.removePerson(removedPersonID).then(() =>
+                Persons.getAll().then((currentPersons) =>
+                    setPersons(currentPersons)
+                )
+            );
+        } else {
+            window.alert("Not in database");
         }
     };
 
@@ -33,10 +68,14 @@ const App = () => {
             <Filter filter={filter} handleFilter={setFilter} />
             <PersonForm handleSubmit={handleSubmit} />
             <h2>Numbers</h2>
-            <Persons persons={displayedPersons} />
+            <PersonsView
+                persons={displayedPersons}
+                handleRemove={handleRemove}
+            />
         </div>
     );
 };
 
 export default App;
 
+// Create services folder for persons handling, add getAll, create, replace method

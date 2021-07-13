@@ -11,14 +11,14 @@ const unknownEndpoint = (_req, res) =>
     res.status(404).send({ error: "Unknown endpoint" });
 
 const errorHandler = (error, _req, res, next) => {
+    console.log(error.name)
     console.log(error.message);
 
-    if (error.name === "CastError" && error.kind === "ObjectId") {
+    if (error.name === "CastError") {
         return res
             .status(400)
             .json({ error: "Malformatted id: Record with ID does not exist." });
-    }
-    if (error.name === "ValidationError") {
+    } else if (error.name === "ValidationError") {
         return res.status(400).json({ error: error.message });
     }
     next(error);
@@ -58,7 +58,7 @@ app.get("/api/persons/:id", (req, res, next) => {
     Person.findById(req.params.id)
         .then((person) => {
             if (person) {
-                res.json(person);
+                res.status(201).json(person);
             } else {
                 res.status(404).send().end();
             }
@@ -66,7 +66,7 @@ app.get("/api/persons/:id", (req, res, next) => {
         .catch((error) => next(error));
 });
 
-app.post("/api/persons/", (req, res,next) => {
+app.post("/api/persons/", (req, res, next) => {
     const body = req.body;
     if (!body.name || !body.number)
         return res.status(400).json({ error: "Name or number missing" });
@@ -75,27 +75,29 @@ app.post("/api/persons/", (req, res,next) => {
         name: body.name,
         number: body.number,
     });
-    newPerson.save().then((savedPerson) => res.json(savedPerson))
-    .catch(error => next(error));
+    newPerson
+        .save()
+        .then((savedPerson) => res.json(savedPerson))
+        .catch((error) => next(error));
 });
 
-app.put("/api/persons/:id", (req, res,next) => {
+app.put("/api/persons/:id", (req, res, next) => {
     const body = req.body;
     const person = new Person({
         _id: req.params.id,
         name: body.name,
         number: body.number,
     });
-    Person.findByIdAndUpdate({_id: req.params.id}, person, {new: true})
-    .then(updatePerson => res.status(204).json(updatePerson))
-    .catch(error => next(error))
+    Person.findByIdAndUpdate({ _id: req.params.id }, person, { new: true })
+        .then((updatePerson) => res.status(204).json(updatePerson))
+        .catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (req, res, next) => {
     Person.findByIdAndRemove(req.params.id)
         .then((result) => {
-            if(result) res.status(204).json(result).end()
-            else res.status(404).end()
+            if (result) res.status(204).json(result).end();
+            else res.status(404).end();
         })
         .catch((error) => next(error));
 });

@@ -1,5 +1,5 @@
 [submodule "part4/bloglist"]
-	path = part4/bloglist
+	path = part4/bloglist-backend
 	url = git@github.com:VANHUUTHANHTRUNG/bloglist.git
 [submodule "part5/bloglist-frontend"]
 	path = part5/bloglist-frontend

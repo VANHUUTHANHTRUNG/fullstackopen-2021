@@ -1,4 +1,5 @@
 const initialState = ''
+let timeoutID = undefined
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -7,7 +8,7 @@ const reducer = (state = initialState, action) => {
     case 'NOTIFY_CREATE':
       return `Created '${action.data.content}'`
     case 'CLEAR_NOTIFICATION':
-      return ''
+      return initialState
     default:
       return state
   }
@@ -15,11 +16,12 @@ const reducer = (state = initialState, action) => {
 
 export const notifyVote = (content, displayTime = 5000) => {
   return async (dispatch) => {
+    if (timeoutID) clearTimeout(timeoutID)
     dispatch({
       type: 'NOTIFY_VOTE',
       data: { content },
     })
-    setTimeout(() => {
+    timeoutID = setTimeout(() => {
       dispatch(clearNotification())
     }, displayTime)
   }
@@ -27,11 +29,12 @@ export const notifyVote = (content, displayTime = 5000) => {
 
 export const notifyCreate = (content, displayTime = 5000) => {
   return async (dispatch) => {
+    if (timeoutID) clearTimeout(timeoutID)
     dispatch({
       type: 'NOTIFY_CREATE',
       data: { content },
     })
-    setTimeout(() => {
+    timeoutID = setTimeout(() => {
       dispatch(clearNotification())
     }, displayTime)
   }

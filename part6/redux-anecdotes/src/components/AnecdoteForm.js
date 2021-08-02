@@ -2,10 +2,11 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { anecdoteCreate } from '../reducers/anecdoteReducer'
 import { notifyCreate } from '../reducers/notificationReducer'
+
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
 
-  const handleAnecdoteSubmit = (event) => {
+  const handleAnecdoteSubmit = async (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''

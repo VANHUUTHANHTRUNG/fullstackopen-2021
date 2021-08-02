@@ -6,9 +6,9 @@ import { notifyVote } from '../reducers/notificationReducer'
 const AnecdoteList = () => {
   const anecdotes = useSelector((state) => state.anecdotes)
   const dispatch = useDispatch()
-  const vote = ({ id, content }) => {
-    dispatch(voteAdd(id))
-    dispatch(notifyVote(content))
+  const vote = (anecdote) => {
+    dispatch(voteAdd(anecdote))
+    dispatch(notifyVote(anecdote.content))
   }
 
   return (

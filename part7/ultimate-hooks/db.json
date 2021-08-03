@@ -1,0 +1,55 @@
+{
+  "notes": [
+    {
+      "content": "custom-hooks are grat",
+      "id": 1
+    },
+    {
+      "content": "the best featrure ever <3",
+      "id": 2
+    },
+    {
+      "content": "asd",
+      "id": 3
+    },
+    {
+      "content": "Manh",
+      "id": 4
+    },
+    {
+      "content": "asdasdasdasd",
+      "id": 5
+    },
+    {
+      "content": "asdadas",
+      "id": 6
+    }
+  ],
+  "persons": [
+    {
+      "name": "mluukkai",
+      "number": "040-5483923",
+      "id": 1
+    },
+    {
+      "name": "kaltsoon",
+      "number": "045-2323456",
+      "id": 2
+    },
+    {
+      "name": "aaaa",
+      "number": "132456789",
+      "id": 3
+    },
+    {
+      "name": "HahA",
+      "number": "2312314564321",
+      "id": 4
+    },
+    {
+      "name": "Yea",
+      "number": "94949120334123",
+      "id": 5
+    }
+  ]
+}

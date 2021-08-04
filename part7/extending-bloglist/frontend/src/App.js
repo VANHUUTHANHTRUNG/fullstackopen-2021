@@ -73,8 +73,10 @@ const App = () => {
 
   async function handleBlogFormSubmit(newObject) {
     if (!user) return
-    if (blogFormRef.current) blogFormRef.current.toggleVisibility()
     try {
+      if (blogFormRef.current) {
+        blogFormRef.current.toggleVisibility()
+      }
       const addedBlog = await blogService.create(newObject)
       setBlogs(blogs.concat(addedBlog))
       setSuccessMessage(
@@ -141,7 +143,7 @@ const App = () => {
     ) : (
       <div>
         <UserPanel username={user.username} handleLogout={handleLogout} />
-        <Togglable buttonLabel='Create new blog'>
+        <Togglable buttonLabel='Create new blog' ref={blogFormRef}>
           <BlogForm handleFormSubmit={handleBlogFormSubmit} />
         </Togglable>
         <Blogs
@@ -156,8 +158,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} flag='error' />
-      <Notification message={successMessage} flag='success' />
+      <Notification />
       {content}
     </div>
   )

@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
-const Notification = ({ message, flag }) => {
+const Notification = () => {
+  const { message, flag } = useSelector((state) => state.notification)
   const notificationStyle = {
     color: flag === 'error' ? 'red' : 'green',
     background: 'lightgrey',

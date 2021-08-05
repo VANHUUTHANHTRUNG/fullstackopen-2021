@@ -11,6 +11,12 @@ userRouter.get('/', async (_req, res) => {
   return res.json(users.map((user) => user.toJSON())).end()
 })
 
+userRouter.get('/:id', async (req, res) => {
+  const user = await UserModel.findById(req.params.id)
+  if (user) return res.status(200).json(user)
+  return res.status(404).end()
+})
+
 userRouter.post('/', async (req, res) => {
   const body = req.body
   if (body.password.length < 4)

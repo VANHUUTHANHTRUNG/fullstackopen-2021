@@ -1,27 +1,20 @@
 import React from 'react'
 import Blog from './Blog'
-import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
-const Blogs = ({ blogs, handleLike, handleRemoveBlog }) => {
+const Blogs = () => {
+  const blogs = useSelector((state) => state.blogs)
+  const sortedBlogs = blogs.sort((first, second) =>
+    first.likes < second.likes ? 1 : -1
+  )
   return (
     <div>
       <h2>Blogs</h2>
-      {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleLike={handleLike}
-          handleRemoveBlog={handleRemoveBlog}
-        />
+      {sortedBlogs.map((blog) => (
+        <Blog key={blog.id} blog={blog} />
       ))}
     </div>
   )
-}
-
-Blogs.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  handleLike: PropTypes.func.isRequired,
-  handleRemoveBlog: PropTypes.func.isRequired,
 }
 
 export default Blogs

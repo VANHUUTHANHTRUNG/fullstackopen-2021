@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { likeBlog, removeBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-const Blog = ({ blog, handleLike, handleRemoveBlog }) => {
+const Blog = ({ blog }) => {
   const [detailView, setDetailView] = useState(false)
 
   const showWhenDetail = { display: detailView ? '' : 'none' }
@@ -17,6 +20,67 @@ const Blog = ({ blog, handleLike, handleRemoveBlog }) => {
   async function handleRemoveClicked() {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`))
       await handleRemoveBlog(blog)
+  }
+
+  const dispatch = useDispatch()
+
+  async function handleLike(likedBlog) {
+    const { author, title, url, id, user } = likedBlog // order matters, undo mongoose.populate in useEffect at the beginning
+    const updatedBlog = {
+      author,
+      title,
+      url,
+      user: user.id || user,
+      id,
+      likes: likedBlog.likes + 1,
+    }
+    try {
+      dispatch(likeBlog(updatedBlog))
+    } catch (error) {
+      if (error.response.status === 403)
+        dispatch(
+          setNotification({
+            message: 'Updating permission denied',
+            flag: 'error',
+          })
+        )
+      else {
+        dispatch(
+          setNotification({
+            message: 'Unspecified cause for updating failure',
+            flag: 'error',
+          })
+        )
+      }
+    }
+  }
+
+  async function handleRemoveBlog(removedBlog) {
+    try {
+      const { id } = removedBlog
+      dispatch(removeBlog(id))
+      dispatch(
+        setNotification({
+          message: `Blog with title ${removedBlog.title} by ${removedBlog.author} successfully removed`,
+          flag: 'success',
+        })
+      )
+    } catch (error) {
+      if (error.response.status === 403)
+        dispatch(
+          setNotification({
+            message: 'Deleting permission denied',
+            flag: 'error',
+          })
+        )
+      else
+        dispatch(
+          setNotification({
+            message: 'Unspecified cause for deleting failure',
+            flag: 'error',
+          })
+        )
+    }
   }
 
   return (
@@ -48,7 +112,5 @@ const Blog = ({ blog, handleLike, handleRemoveBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  handleLike: PropTypes.func.isRequired,
-  handleRemoveBlog: PropTypes.func.isRequired,
 }
 export default Blog

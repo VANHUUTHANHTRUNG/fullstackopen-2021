@@ -1,15 +1,17 @@
 import blogService from '../services/blogs'
-
+import userService from '../services/users'
 const initialState = []
+let updatedState = []
 
 const blogReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'CREATE_BLOG':
       return [...state, action.data]
     case 'LIKE_BLOG':
-      return state.map((blog) =>
-        blog.id === action.data.id ? action.data : blog
+      updatedState = state.map((s) =>
+        s.id === action.data.id ? action.data : s
       )
+      return updatedState
     case 'REMOVE_BLOG':
       return state.filter((blog) => blog.id !== action.data.id)
     case 'INIT_BLOGS':
@@ -32,9 +34,11 @@ export const createBlog = (newObject) => {
 export const likeBlog = (newObject) => {
   return async (dispatch) => {
     const updatedBlog = await blogService.update(newObject)
+    const blogOwner = await userService.findById(newObject.user)
+    const populatedUpdatedBlog = { ...updatedBlog, user: blogOwner }
     dispatch({
       type: 'LIKE_BLOG',
-      data: updatedBlog,
+      data: populatedUpdatedBlog,
     })
   }
 }

@@ -49,9 +49,6 @@ const LoginPage = () => {
           flag: 'error',
         })
       )
-    } finally {
-      username.onReset()
-      password.onReset()
     }
   }
   return (

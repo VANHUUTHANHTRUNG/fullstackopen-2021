@@ -1,3 +1,4 @@
+import blogService from '../services/blogs'
 import loginService from '../services/login'
 
 const loggedBloglistUser = JSON.parse(
@@ -12,6 +13,8 @@ const loginReducer = (state = initialState, action) => {
       return action.data
     case 'LOGOUT':
       return null
+    case 'SET_LOGGED_USER':
+      return action.data
     default:
       return state
   }
@@ -19,10 +22,33 @@ const loginReducer = (state = initialState, action) => {
 
 export const login = (credentials) => {
   return async (dispatch) => {
-    const user = await loginService.login(credentials)
+    try {
+      const loggedUser = await loginService.login(credentials)
+      if (loggedUser) {
+        window.localStorage.setItem(
+          'loggedBloglistUser',
+          JSON.stringify(loggedUser)
+        )
+        blogService.setToken(loggedUser.token)
+      }
+      dispatch({
+        type: 'LOGIN',
+        data: loggedUser,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+export const setLoggedUser = (loggedUser) => {
+  return async (dispatch) => {
+    window.localStorage.setItem(
+      'loggedBloglistUser',
+      JSON.stringify(loggedUser)
+    )
     dispatch({
-      type: 'LOGIN',
-      data: user,
+      type: 'SET_LOGGED_USER',
+      data: loggedUser,
     })
   }
 }

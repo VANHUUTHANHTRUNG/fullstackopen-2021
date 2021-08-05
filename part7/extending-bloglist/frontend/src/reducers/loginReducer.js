@@ -19,7 +19,7 @@ const loginReducer = (state = initialState, action) => {
 
 export const login = (credentials) => {
   return async (dispatch) => {
-    const user = await loginService.login({ credentials })
+    const user = await loginService.login(credentials)
     dispatch({
       type: 'LOGIN',
       data: user,

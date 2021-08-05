@@ -1,25 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import Blogs from './components/Blogs'
-import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import UserPanel from './components/UserPanel'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
-import loginService from './services/login'
+import { logout } from './reducers/loginReducer'
+import { setNotification } from './reducers/notificationReducer'
+
+import LoginPage from './components/LoginPage'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-
+  const user = useSelector((state) => state.login)
   const blogFormRef = useRef(null)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -29,46 +28,23 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
       blogService.setToken(user.token)
     }
   }, [])
 
   useEffect(() => {
-    setTimeout(() => setErrorMessage(null), 10000)
-  }, [errorMessage])
-
-  useEffect(() => {
-    setTimeout(() => setSuccessMessage(null), 10000)
-  }, [successMessage])
-
-  useEffect(() => {
     blogService.setToken(user === null ? null : user.token)
   }, [user])
 
-  async function handleLogin(event) {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({ username, password })
-      blogService.setToken(user.token)
-      window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
-      setUser(user)
-      setSuccessMessage(`${username} succeeds to login`)
-    } catch (exception) {
-      setErrorMessage('wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    } finally {
-      setUsername('')
-      setPassword('')
-    }
-  }
-
   function handleLogout() {
     window.localStorage.removeItem('loggedBloglistUser')
-    setUser(null)
-    setSuccessMessage('Successfully logout')
+    dispatch(logout())
+    dispatch(
+      setNotification({
+        message: 'Successfully logged out',
+        flag: 'success',
+      })
+    )
   }
 
   async function handleBlogFormSubmit(newObject) {
@@ -79,8 +55,11 @@ const App = () => {
       }
       const addedBlog = await blogService.create(newObject)
       setBlogs(blogs.concat(addedBlog))
-      setSuccessMessage(
-        `Blog with title ${addedBlog.title} by ${addedBlog.author} successfully added`
+      dispatch(
+        setNotification({
+          message: `Blog with title ${addedBlog.title} by ${addedBlog.author} successfully added`,
+          flag: 'success',
+        })
       )
     } catch (error) {
       console.log(error)
@@ -106,9 +85,19 @@ const App = () => {
       setBlogs(updatedBlogs)
     } catch (error) {
       if (error.response.status === 403)
-        setErrorMessage('Updating permission denied')
+        dispatch(
+          setNotification({
+            message: 'Updating permission denied',
+            flag: 'error',
+          })
+        )
       else {
-        setErrorMessage('Unspecified cause for updating failure')
+        dispatch(
+          setNotification({
+            message: 'Unspecified cause for updating failure',
+            flag: 'error',
+          })
+        )
       }
     }
   }
@@ -119,27 +108,33 @@ const App = () => {
       await blogService.remove(id)
       const updatedBlogs = blogs.filter((blog) => blog.id !== id)
       setBlogs(updatedBlogs)
-      setSuccessMessage(
-        `Blog with title ${removeBlog.title} by ${removeBlog.author} successfully removed`
+      dispatch(
+        setNotification({
+          message: `Blog with title ${removeBlog.title} by ${removeBlog.author} successfully removed`,
+          flag: 'success',
+        })
       )
     } catch (error) {
       if (error.response.status === 403)
-        setErrorMessage('Deleting permission denied')
-      else setErrorMessage('Unspecified cause for deleting failure')
+        dispatch(
+          setNotification({
+            message: 'Deleting permission denied',
+            flag: 'error',
+          })
+        )
+      else
+        dispatch(
+          setNotification({
+            message: 'Unspecified cause for deleting failure',
+            flag: 'error',
+          })
+        )
     }
   }
 
   const content =
     user === null ? (
-      <Togglable buttonLabel='Login'>
-        <LoginForm
-          handleSubmit={handleLogin}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          username={username}
-          password={password}
-        />
-      </Togglable>
+      <LoginPage />
     ) : (
       <div>
         <UserPanel username={user.username} handleLogout={handleLogout} />

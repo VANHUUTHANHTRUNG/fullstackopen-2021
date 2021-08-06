@@ -7,6 +7,7 @@ import Notification from './components/Notification'
 import LoginPage from './components/LoginPage'
 import HomePage from './components/HomePage'
 import NavBar from './components/NavBar'
+import UserView from './components/UserView'
 import UsersView from './components/UsersView'
 
 import blogService from './services/blogs'
@@ -42,6 +43,7 @@ const App = () => {
       <NavBar />
       <Notification />
       <Switch>
+        <Route path='/users/:id' component={UserView} />
         <Route path='/users' component={UsersView} />
         <Route path='/login' component={LoginPage} />
         <Route

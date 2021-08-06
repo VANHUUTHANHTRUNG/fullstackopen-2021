@@ -13,7 +13,7 @@ const UsersView = () => {
         <ul>
           {users.map((user) => (
             <li key={user.id}>
-              <Link>
+              <Link to={`/users/${user.id}`}>
                 <span>{user.username}</span>
               </Link>
               <span>{user?.blogs?.length}</span>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router'
 
 import { setNotification } from '../reducers/notificationReducer'
 import Togglable from './Togglable'
@@ -11,7 +12,7 @@ const LoginPage = () => {
   const dispatch = useDispatch()
   const username = useField('text')
   const password = useField('password')
-
+  const history = useHistory()
   async function handleLogin(event) {
     event.preventDefault()
     if (
@@ -29,12 +30,13 @@ const LoginPage = () => {
       return
     }
     try {
-      dispatch(
+      await dispatch(
         login({
           username: username.value,
           password: password.value,
         })
       )
+      history.push('/')
       dispatch(
         setNotification({
           message: `${username.value} succeeds to login`,

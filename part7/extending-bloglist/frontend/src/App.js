@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import Notification from './components/Notification'
-import UserPanel from './components/UserPanel'
+import LoginPage from './components/LoginPage'
+import HomePage from './components/HomePage'
+import NavBar from './components/NavBar'
+import UsersView from './components/UsersView'
 
 import blogService from './services/blogs'
 import { initBlogs } from './reducers/blogReducer'
-
-import LoginPage from './components/LoginPage'
-import HomePage from './components/HomePage'
+import { initUsers } from './reducers/userReducer'
 import { setLoggedUser } from './reducers/loginReducer'
 
 const App = () => {
@@ -19,6 +21,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initBlogs())
+    dispatch(initUsers())
   }, [dispatch])
 
   useEffect(() => {
@@ -34,20 +37,18 @@ const App = () => {
     blogService.setToken(user === null ? null : user.token)
   }, [user])
 
-  const content =
-    user === null ? (
-      <LoginPage />
-    ) : (
-      <div>
-        <UserPanel />
-        <HomePage />
-      </div>
-    )
-
   return (
     <div>
+      <NavBar />
       <Notification />
-      {content}
+      <Switch>
+        <Route path='/users' component={UsersView} />
+        <Route path='/login' component={LoginPage} />
+        <Route
+          path='/'
+          render={() => (user ? <HomePage /> : <Redirect to='/login' />)}
+        />
+      </Switch>
     </div>
   )
 }

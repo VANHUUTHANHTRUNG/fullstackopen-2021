@@ -12,6 +12,11 @@ const blogReducer = (state = initialState, action) => {
         s.id === action.data.id ? action.data : s
       )
       return updatedState
+    case 'COMMENT_BLOG':
+      updatedState = state.map((s) =>
+        s.id === action.data.id ? action.data : s
+      )
+      return updatedState
     case 'REMOVE_BLOG':
       return state.filter((blog) => blog.id !== action.data.id)
     case 'INIT_BLOGS':
@@ -59,6 +64,18 @@ export const initBlogs = () => {
     dispatch({
       type: 'INIT_BLOGS',
       data: blogs,
+    })
+  }
+}
+
+export const commentBlog = (newObject) => {
+  return async (dispatch) => {
+    const updatedBlog = await blogService.update(newObject)
+    const blogOwner = await userService.findById(newObject.user)
+    const populatedUpdatedBlog = { ...updatedBlog, user: blogOwner }
+    dispatch({
+      type: 'COMMENT_BLOG',
+      data: populatedUpdatedBlog,
     })
   }
 }

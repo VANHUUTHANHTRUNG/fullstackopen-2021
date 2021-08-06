@@ -26,12 +26,13 @@ const Blog = ({ blog }) => {
   const dispatch = useDispatch()
 
   async function handleLike(likedBlog) {
-    const { author, title, url, id, user } = likedBlog // order matters, undo mongoose.populate in useEffect at the beginning
+    const { comments, author, title, url, id, user } = likedBlog // order matters, undo mongoose.populate in useEffect at the beginning
     const updatedBlog = {
+      comments,
       author,
       title,
       url,
-      user: user.id || user,
+      user: user?.id || user,
       id,
       likes: likedBlog.likes + 1,
     }

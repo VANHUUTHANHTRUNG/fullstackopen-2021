@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog }) => {
   const [detailView, setDetailView] = useState(false)
@@ -86,7 +87,7 @@ const Blog = ({ blog }) => {
   return (
     <div style={blogStyle}>
       <div>
-        {blog.title} {blog.author}
+        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
         <button onClick={() => setDetailView(!detailView)}>
           {detailView ? 'hide' : 'view'}
         </button>

@@ -9,6 +9,7 @@ import HomePage from './components/HomePage'
 import NavBar from './components/NavBar'
 import UserView from './components/UserView'
 import UsersView from './components/UsersView'
+import BlogView from './components/BlogView'
 
 import blogService from './services/blogs'
 import { initBlogs } from './reducers/blogReducer'
@@ -43,6 +44,7 @@ const App = () => {
       <NavBar />
       <Notification />
       <Switch>
+        <Route path='/blogs/:id' component={BlogView} />
         <Route path='/users/:id' component={UserView} />
         <Route path='/users' component={UsersView} />
         <Route path='/login' component={LoginPage} />

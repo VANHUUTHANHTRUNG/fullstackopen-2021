@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
+
+import { Box, Button, TableCell, TableRow } from '@material-ui/core'
+
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
-import { Link } from 'react-router-dom'
 
 const Blog = ({ blog }) => {
   const [detailView, setDetailView] = useState(false)
@@ -81,29 +84,46 @@ const Blog = ({ blog }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      <div>
-        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-        <button onClick={() => setDetailView(!detailView)}>
-          {detailView ? 'hide' : 'quick view'}
-        </button>
-      </div>
-      <div style={showWhenDetail}>
-        <p>
-          <a href={blog.url}>{blog.url}</a>
-        </p>
-        <p data-testid='like'>
-          likes : {blog.likes}
-          <button type='button' onClick={(event) => handleLike(event, blog)}>
-            like
-          </button>
-        </p>
-        <p>posted here by {blog.user?.username} </p>
-        <button type='button' onClick={handleRemoveClicked}>
-          remove
-        </button>
-      </div>
-    </div>
+    <TableRow style={blogStyle}>
+      <TableCell>
+        <Box>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          <Button
+            style={{ float: 'right' }}
+            variant='contained'
+            color='inherit'
+            onClick={() => setDetailView(!detailView)}
+          >
+            {detailView ? 'hide' : 'quick view'}
+          </Button>
+        </Box>
+        <Box style={showWhenDetail}>
+          <p>
+            <a href={blog.url}>{blog.url}</a>
+          </p>
+          <p data-testid='like'>
+            likes : {blog.likes}
+            <Button
+              variant='contained'
+              color='inherit'
+              type='button'
+              onClick={(event) => handleLike(event, blog)}
+            >
+              like
+            </Button>
+          </p>
+          <p>posted here by {blog.user?.username} </p>
+          <Button
+            variant='contained'
+            color='inherit'
+            type='button'
+            onClick={handleRemoveClicked}
+          >
+            remove
+          </Button>
+        </Box>
+      </TableCell>
+    </TableRow>
   )
 }
 

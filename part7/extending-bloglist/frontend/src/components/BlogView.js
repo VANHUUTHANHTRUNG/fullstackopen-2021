@@ -6,6 +6,14 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { likeBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Typography,
+} from '@material-ui/core'
 
 const BlogView = () => {
   const blogs = useSelector((state) => state.blogs)
@@ -40,25 +48,30 @@ const BlogView = () => {
 
   return blog ? (
     <div>
-      <h1>{blog.title}</h1>
+      <Typography variant='h3' color='inherit'>
+        {blog.title}
+      </Typography>
       <a href={blog.url}>{blog.url}</a>
-      <p data-testid='like'>
+      <Typography data-testid='like'>
         likes : {blog.likes}
-        <button type='button' onClick={handleLike}>
+        <Button variant='outlined' type='button' onClick={handleLike}>
           like
-        </button>
-      </p>
-      <p>posted here by {blog.user.username} </p>
-      <h2>comments</h2>
+        </Button>
+      </Typography>
+      <Typography>posted here by {blog.user.username} </Typography>
       <CommentForm blog={blog} />
       {blog.comments?.length === 0 ? (
-        <p>Be the first to comment!</p>
+        <Typography>Be the first to comment!</Typography>
       ) : (
-        <ul>
-          {blog.comments.map((comment) => (
-            <li key={comment.id}>{comment.content}</li>
-          ))}
-        </ul>
+        <Table>
+          <TableBody>
+            {blog.comments.map((comment) => (
+              <TableRow key={comment.id}>
+                <TableCell>{comment.content}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       )}
     </div>
   ) : null

@@ -1,3 +1,12 @@
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@material-ui/core'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -5,23 +14,31 @@ import { Link } from 'react-router-dom'
 const UsersView = () => {
   const users = useSelector((state) => state.users)
   return (
-    <div>
-      <h1>Users</h1>
-      <div>
-        <span>Username</span>
-        <span>Blogs created</span>
-        <ul>
+    <Box>
+      <Typography variant='h4'>Users</Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Username</TableCell>
+            <TableCell>Blogs created</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {users.map((user) => (
-            <li key={user.id}>
-              <Link to={`/users/${user.id}`}>
-                <span>{user.username}</span>
-              </Link>
-              <span>{user?.blogs?.length}</span>
-            </li>
+            <TableRow key={user.id}>
+              <TableCell>
+                <Link to={`/users/${user.id}`}>
+                  <span>{user.username}</span>
+                </Link>
+              </TableCell>
+              <TableCell>
+                <span>{user?.blogs?.length}</span>
+              </TableCell>
+            </TableRow>
           ))}
-        </ul>
-      </div>
-    </div>
+        </TableBody>
+      </Table>
+    </Box>
   )
 }
 

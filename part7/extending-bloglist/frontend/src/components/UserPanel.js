@@ -1,5 +1,8 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+import { Button, Typography, Box } from '@material-ui/core'
+
 import { setNotification } from '../reducers/notificationReducer'
 import { logout } from '../reducers/loginReducer'
 import blogService from '../services/blogs'
@@ -22,14 +25,14 @@ const UserPanel = () => {
   }
 
   return (
-    <div>
-      <p>
+    <Box display='flex' flexDirection='row-reverse'>
+      <Typography>
         Current user: {user.username}
-        <button type='button' onClick={handleLogout}>
+        <Button variant='outlined' type='button' onClick={handleLogout}>
           Logout
-        </button>
-      </p>
-    </div>
+        </Button>
+      </Typography>
+    </Box>
   )
 }
 

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { Switch, Route, Redirect } from 'react-router-dom'
+import Container from '@material-ui/core/Container'
 
 import Notification from './components/Notification'
 import LoginPage from './components/LoginPage'
@@ -40,20 +41,22 @@ const App = () => {
   }, [user])
 
   return (
-    <div>
-      <NavBar />
-      <Notification />
-      <Switch>
-        <Route path='/blogs/:id' component={BlogView} />
-        <Route path='/users/:id' component={UserView} />
-        <Route path='/users' component={UsersView} />
-        <Route path='/login' component={LoginPage} />
-        <Route
-          path='/'
-          render={() => (user ? <HomePage /> : <Redirect to='/login' />)}
-        />
-      </Switch>
-    </div>
+    <Container>
+      <div>
+        <NavBar />
+        <Notification />
+        <Switch>
+          <Route path='/blogs/:id' component={BlogView} />
+          <Route path='/users/:id' component={UserView} />
+          <Route path='/users' component={UsersView} />
+          <Route path='/login' component={LoginPage} />
+          <Route
+            path='/'
+            render={() => (user ? <HomePage /> : <Redirect to='/login' />)}
+          />
+        </Switch>
+      </div>
+    </Container>
   )
 }
 

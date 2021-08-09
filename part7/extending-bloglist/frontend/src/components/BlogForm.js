@@ -1,47 +1,47 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import BlogFormInput from './BlogFormInput'
 
+import { Button, Typography } from '@material-ui/core'
+
+import BlogFormInput from './BlogFormInput'
+import { useField } from '../hooks'
 const BlogForm = ({ handleFormSubmit }) => {
-  const [author, setAuthor] = useState('')
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
+  const author = useField('text')
+  const title = useField('text')
+  const url = useField('text')
 
   function resetForm() {
-    setAuthor('')
-    setTitle('')
-    setUrl('')
+    author.onReset()
+    title.onReset()
+    url.onReset()
   }
 
   async function onSubmit(event) {
     event.preventDefault()
-    const newObject = { author, title, url }
+    const newObject = {
+      author: author.value,
+      title: title.value,
+      url: url.value,
+    }
     await handleFormSubmit(newObject)
     resetForm()
   }
 
   return (
     <div>
-      <h2>Create new</h2>
+      <Typography variant='h4'>Create new</Typography>
       <form id='blog-form' onSubmit={onSubmit}>
-        <BlogFormInput
-          title='Author'
-          value={author}
-          handleInputChange={({ target }) => setAuthor(target.value)}
-        />
-        <BlogFormInput
-          title='Title'
-          value={title}
-          handleInputChange={({ target }) => setTitle(target.value)}
-        />
-        <BlogFormInput
-          title='Url'
-          value={url}
-          handleInputChange={({ target }) => setUrl(target.value)}
-        />
-        <button data-testid='submit-create-btn' type='submit'>
+        <BlogFormInput title='Author' {...author} />
+        <BlogFormInput title='Title' {...title} />
+        <BlogFormInput title='Url' {...url} />
+        <Button
+          variant='contained'
+          color='primary'
+          data-testid='submit-create-btn'
+          type='submit'
+        >
           Create
-        </button>
+        </Button>
       </form>
     </div>
   )

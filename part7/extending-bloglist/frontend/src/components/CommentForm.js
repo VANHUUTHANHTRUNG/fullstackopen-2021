@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { commentBlog } from '../reducers/blogReducer'
 import { useField } from '../hooks'
+import { Button, TextField } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 const CommentForm = ({ blog }) => {
   const comment = useField('text')
   const dispatch = useDispatch()
@@ -35,13 +37,19 @@ const CommentForm = ({ blog }) => {
   }
   return (
     <div>
-      <h3>Comment form</h3>
+      <Typography color='inherit' variant='h4'>
+        Comments
+      </Typography>
       <form onSubmit={handleComment}>
         <div>
-          <button data-testid='submit-login-btn' type='submit'>
+          <Button
+            variant='outlined'
+            data-testid='submit-login-btn'
+            type='submit'
+          >
             Add comment
-          </button>
-          <input data-testid='comment' {...comment} />
+          </Button>
+          <TextField data-testid='comment' {...comment} />
         </div>
       </form>
     </div>

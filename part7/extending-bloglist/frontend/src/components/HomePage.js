@@ -6,6 +6,7 @@ import BlogForm from './BlogForm'
 import Blogs from './Blogs'
 import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { Box } from '@material-ui/core'
 
 const HomePage = () => {
   const blogFormRef = useRef(null)
@@ -29,12 +30,12 @@ const HomePage = () => {
   }
 
   return (
-    <div>
+    <Box>
       <Togglable buttonLabel='Create new blog' ref={blogFormRef}>
         <BlogForm handleFormSubmit={handleBlogFormSubmit} />
       </Togglable>
       <Blogs />
-    </div>
+    </Box>
   )
 }
 

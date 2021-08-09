@@ -1,6 +1,9 @@
 import React from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { Box, Table, TableCell, TableRow, Typography } from '@material-ui/core'
+import { TableBody } from '@material-ui/core'
 
 const UserView = () => {
   const users = useSelector((state) => state.users)
@@ -8,16 +11,24 @@ const UserView = () => {
   const user = match ? users.find((user) => user.id === match.params.id) : null
   return user ? (
     <div>
-      <h1>{user.username}</h1>
-      <h2> Added blogs</h2>
+      <Typography variant='h4'>{user.username}</Typography>
+      <Typography variant='h5'> Added blogs</Typography>
       {user.blogs.length === 0 ? (
         <p>No blog was addded</p>
       ) : (
-        <ul>
-          {user.blogs.map((blog) => (
-            <li key={blog.id}>{blog.title}</li>
-          ))}
-        </ul>
+        <Table>
+          <TableBody>
+            {user.blogs.map((blog) => (
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Box component={Link} to={`/blogs/${blog.id}`}>
+                    {blog.title}
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       )}
     </div>
   ) : null

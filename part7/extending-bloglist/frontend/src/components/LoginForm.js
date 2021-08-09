@@ -1,22 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
+import { TextField, Button } from '@material-ui/core'
 const LoginForm = ({ handleSubmit, username, password }) => {
   return (
     <div>
       <h2>Login form</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          Username
-          <input data-testid='username' {...username} />
-        </div>
-        <div>
-          Password
-          <input data-testid='password' {...password} />
-        </div>
-        <button data-testid='submit-login-btn' type='submit'>
+        <TextField label='Username' data-testid='username' {...username} />
+        <TextField
+          label='Password'
+          type='password'
+          data-testid='password'
+          {...password}
+        />
+        <Button
+          variant='contained'
+          color='primary'
+          data-testid='submit-login-btn'
+          type='submit'
+        >
           Login
-        </button>
+        </Button>
       </form>
     </div>
   )

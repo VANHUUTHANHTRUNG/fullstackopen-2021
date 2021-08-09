@@ -55,11 +55,18 @@ export const likeBlog = (object) => {
 
 export const removeBlog = (id) => {
   return async (dispatch) => {
-    const removedBlog = await blogService.remove(id)
-    dispatch({
-      type: 'REMOVE_BLOG',
-      data: removedBlog,
-    })
+    try {
+      const removedBlog = await blogService.remove(id)
+      dispatch({
+        type: 'REMOVE_BLOG',
+        data: removedBlog,
+      })
+    } catch (error) {
+      console.log('error from removeBlog')
+      const newError = { ...error.toJSON(), statusCode: 403 }
+      console.log(newError)
+      throw new Error({ ...error.toJSON(), statusCode: 403 })
+    }
   }
 }
 

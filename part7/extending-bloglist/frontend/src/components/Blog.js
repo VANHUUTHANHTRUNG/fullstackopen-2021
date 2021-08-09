@@ -21,9 +21,11 @@ const Blog = ({ blog }) => {
     marginBottom: 5,
   }
 
-  async function handleRemoveClicked() {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`))
+  async function handleRemoveClicked(event, blog) {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      event.preventDefault()
       await handleRemoveBlog(blog)
+    }
   }
 
   const dispatch = useDispatch()
@@ -59,14 +61,9 @@ const Blog = ({ blog }) => {
     try {
       const { id } = removedBlog
       dispatch(removeBlog(id))
-      dispatch(
-        setNotification({
-          message: `Blog with title ${removedBlog.title} by ${removedBlog.author} successfully removed`,
-          flag: 'success',
-        })
-      )
     } catch (error) {
-      if (error.response.status === 403)
+      console.log('from handleRemoveBlog', error)
+      if (error.statusCode === 403)
         dispatch(
           setNotification({
             message: 'Deleting permission denied',
@@ -81,6 +78,13 @@ const Blog = ({ blog }) => {
           })
         )
     }
+
+    dispatch(
+      setNotification({
+        message: `Blog with title ${removedBlog.title} by ${removedBlog.author} successfully removed`,
+        flag: 'success',
+      })
+    )
   }
 
   return (
@@ -117,7 +121,7 @@ const Blog = ({ blog }) => {
             variant='contained'
             color='inherit'
             type='button'
-            onClick={handleRemoveClicked}
+            onClick={(event) => handleRemoveClicked(event, blog)}
           >
             remove
           </Button>

@@ -8,13 +8,13 @@ const blogReducer = (state = initialState, action) => {
     case 'CREATE_BLOG':
       return [...state, action.data]
     case 'LIKE_BLOG':
-      updatedState = state.map((s) =>
-        s.id === action.data.id ? action.data : s
+      updatedState = state.map((blog) =>
+        blog.id === action.data.id ? action.data : blog
       )
       return updatedState
     case 'COMMENT_BLOG':
-      updatedState = state.map((s) =>
-        s.id === action.data.id ? action.data : s
+      updatedState = state.map((blog) =>
+        blog.id === action.data.id ? action.data : blog
       )
       return updatedState
     case 'REMOVE_BLOG':
@@ -36,7 +36,12 @@ export const createBlog = (newObject) => {
   }
 }
 
-export const likeBlog = (newObject) => {
+export const likeBlog = (object) => {
+  const newObject = {
+    ...object,
+    user: object.user?.id || object.user,
+    likes: object.likes + 1,
+  }
   return async (dispatch) => {
     const updatedBlog = await blogService.update(newObject)
     const blogOwner = await userService.findById(newObject.user)
@@ -68,15 +73,19 @@ export const initBlogs = () => {
   }
 }
 
-export const commentBlog = (newObject) => {
+export const commentBlog = (object, content) => {
   return async (dispatch) => {
-    const updatedBlog = await blogService.update(newObject)
-    const blogOwner = await userService.findById(newObject.user)
-    const populatedUpdatedBlog = { ...updatedBlog, user: blogOwner }
-    dispatch({
-      type: 'COMMENT_BLOG',
-      data: populatedUpdatedBlog,
-    })
+    try {
+      const updatedBlog = await blogService.comment(object.id, content)
+      const blogOwner = await userService.findById(object.user.id)
+      const populatedUpdatedBlog = { ...updatedBlog, user: blogOwner }
+      dispatch({
+        type: 'COMMENT_BLOG',
+        data: populatedUpdatedBlog,
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 

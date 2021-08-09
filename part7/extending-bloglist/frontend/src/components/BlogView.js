@@ -1,4 +1,6 @@
 import React from 'react'
+import CommentForm from './CommentForm'
+
 import { useRouteMatch } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
@@ -10,35 +12,29 @@ const BlogView = () => {
   const match = useRouteMatch('/blogs/:id')
   const dispatch = useDispatch()
   const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
-  async function handleLike() {
-    const { comments, author, title, url, id } = blog // order matters -> solution: use lodash to compare object in backend
-    const updatedBlog = {
-      comments,
-      author,
-      title,
-      url,
-      user: blog.user?.id || blog.user,
-      id,
-      likes: blog.likes + 1,
+  function handleError(error) {
+    if (error.response.status === 403)
+      dispatch(
+        setNotification({
+          message: 'Updating permission denied',
+          flag: 'error',
+        })
+      )
+    else {
+      dispatch(
+        setNotification({
+          message: 'Unspecified cause for updating failure',
+          flag: 'error',
+        })
+      )
     }
+  }
+
+  async function handleLike() {
     try {
-      dispatch(likeBlog(updatedBlog))
+      dispatch(likeBlog(blog))
     } catch (error) {
-      if (error.response.status === 403)
-        dispatch(
-          setNotification({
-            message: 'Updating permission denied',
-            flag: 'error',
-          })
-        )
-      else {
-        dispatch(
-          setNotification({
-            message: 'Unspecified cause for updating failure',
-            flag: 'error',
-          })
-        )
-      }
+      handleError(error)
     }
   }
 
@@ -54,6 +50,7 @@ const BlogView = () => {
       </p>
       <p>posted here by {blog.user.username} </p>
       <h2>comments</h2>
+      <CommentForm blog={blog} />
       {blog.comments?.length === 0 ? (
         <p>Be the first to comment!</p>
       ) : (

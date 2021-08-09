@@ -25,16 +25,11 @@ const Blog = ({ blog }) => {
 
   const dispatch = useDispatch()
 
-  async function handleLike(likedBlog) {
-    const { comments, author, title, url, id, user } = likedBlog // order matters, undo mongoose.populate in useEffect at the beginning
+  async function handleLike(event, likedBlog) {
+    event.preventDefault()
     const updatedBlog = {
-      comments,
-      author,
-      title,
-      url,
-      user: user?.id || user,
-      id,
-      likes: likedBlog.likes + 1,
+      ...likedBlog,
+      user: likedBlog.user?.id || likedBlog.user,
     }
     try {
       dispatch(likeBlog(updatedBlog))
@@ -90,7 +85,7 @@ const Blog = ({ blog }) => {
       <div>
         <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
         <button onClick={() => setDetailView(!detailView)}>
-          {detailView ? 'hide' : 'view'}
+          {detailView ? 'hide' : 'quick view'}
         </button>
       </div>
       <div style={showWhenDetail}>
@@ -99,11 +94,11 @@ const Blog = ({ blog }) => {
         </p>
         <p data-testid='like'>
           likes : {blog.likes}
-          <button type='button' onClick={() => handleLike(blog)}>
+          <button type='button' onClick={(event) => handleLike(event, blog)}>
             like
           </button>
         </p>
-        <p>posted here by {blog.user.username} </p>
+        <p>posted here by {blog.user?.username} </p>
         <button type='button' onClick={handleRemoveClicked}>
           remove
         </button>

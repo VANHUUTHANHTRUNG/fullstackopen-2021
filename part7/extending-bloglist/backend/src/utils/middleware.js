@@ -36,7 +36,8 @@ const userExtractor = async (req, res, next) => {
     if (!decodedToken.id)
       return res.status(401).json({ error: 'token not verified' })
     req.user = await UserModel.findById(decodedToken.id).select('-passwordHash')
-  } catch {
+  } catch (error) {
+    console.log(error)
     return res.status(403).json({ error: 'token invalid' })
   }
   next()

@@ -65,7 +65,7 @@ export const removeBlog = (id) => {
       console.log('error from removeBlog')
       const newError = { ...error.toJSON(), statusCode: 403 }
       console.log(newError)
-      throw new Error({ ...error.toJSON(), statusCode: 403 })
+      throw new Error(newError)
     }
   }
 }

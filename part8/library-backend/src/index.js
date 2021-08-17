@@ -92,7 +92,7 @@ const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     genres: [String!]!
     id: ID!
   }
@@ -100,21 +100,15 @@ const typeDefs = gql`
   type Author {
     name: String!
     born: Int
-    id: ID!
-  }
-
-  type AuthorBookCount {
-    name: String!
-    born: Int
-    id: ID!
     bookCount: Int!
+    id: ID!
   }
 
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book]
-    allAuthors: [AuthorBookCount!]!
+    allAuthors: [Author]!
   }
 
   type Mutation {
@@ -133,23 +127,35 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (_root, args) => {
+      const booksWithAuthor = books.map((currentBook) => {
+        const foundAuthor = authors.find(
+          (author) => author.name === currentBook.author
+        )
+        return {
+          ...currentBook,
+          author: foundAuthor,
+        }
+      })
+
       if (args.author)
-        return books.reduce(
+        return booksWithAuthor.reduce(
           (matchedBooks, currentBook) =>
-            currentBook.author === args.author
+            currentBook.author.name === args.author
               ? [...matchedBooks, currentBook]
               : matchedBooks,
           []
         )
+
       if (args.genre)
-        return books.reduce(
+        return booksWithAuthor.reduce(
           (matchedBooks, currentBook) =>
             currentBook.genres.includes(args.genre)
               ? [...matchedBooks, currentBook]
               : matchedBooks,
           []
         )
-      return books
+
+      return booksWithAuthor
     },
     allAuthors: () =>
       authors.map((author) => {
@@ -171,6 +177,7 @@ const resolvers = {
         const author = {
           name: args.author,
           born: null,
+          bookCount: 1,
           id: uuid(),
         }
         authors = [...authors, author]

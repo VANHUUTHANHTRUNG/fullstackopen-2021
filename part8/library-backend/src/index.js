@@ -47,11 +47,22 @@ const typeDefs = gql`
     id: ID!
   }
 
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book]
     allAuthors: [Author]!
+    me: User
   }
 
   type Mutation {
@@ -145,10 +156,8 @@ const resolvers = {
       author.bookCount = await Book.countDocuments({
         author: { $eq: author.id },
       })
-      console.log(author)
       try {
         await author.save()
-        console.log(author)
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,

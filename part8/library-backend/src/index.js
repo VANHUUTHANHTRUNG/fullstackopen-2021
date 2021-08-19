@@ -4,7 +4,6 @@ const {
   UserInputError,
   AuthenticationError,
 } = require('apollo-server')
-const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 

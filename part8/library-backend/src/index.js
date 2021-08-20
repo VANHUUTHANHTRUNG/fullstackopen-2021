@@ -87,7 +87,6 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (_root, args) => {
-      console.log(args)
       if (args.author && args.genre)
         return await Book.find({
           $and: [
@@ -178,10 +177,12 @@ const resolvers = {
         newBook = new Book({ ...args, author: author._id })
         await newBook.save()
       } catch (error) {
+        console.log('user input error')
         throw new UserInputError(error.message, {
           invalidArgs: args,
         })
       }
+      newBook = await newBook.populate('author').execPopulate()
       return newBook
     },
     editAuthor: async (_root, args, { currentUser }) => {

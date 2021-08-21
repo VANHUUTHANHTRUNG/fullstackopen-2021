@@ -6,6 +6,8 @@ const {
 } = require('apollo-server')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
 
 const Author = require('./models/Author')
 const Book = require('./models/Book')
@@ -80,6 +82,10 @@ const typeDefs = gql`
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 
 const resolvers = {
@@ -113,20 +119,16 @@ const resolvers = {
       else return Book.find({}).populate('author')
     },
     allAuthors: async () => {
-      const authors = await Author.find({})
-      let authorsBooksCounted = await Promise.all(
-        authors.map(async (author) => {
-          const booksCounted = await Book.find({
-            author: { $eq: author.id },
-          })
-          return {
-            name: author.name,
-            born: author.born,
-            id: author.id,
-            bookCount: booksCounted.length,
-          }
-        })
-      )
+      const authors = await Author.find({}).populate('books')
+      let authorsBooksCounted = authors.map(async (author) => {
+        return {
+          name: author.name,
+          born: author.born,
+          id: author.id,
+          bookCount: author.books.length,
+        }
+      })
+
       return authorsBooksCounted
     },
     me: async (_root, _args, context) => {
@@ -183,6 +185,7 @@ const resolvers = {
         })
       }
       newBook = await newBook.populate('author').execPopulate()
+      pubsub.publish('BOOK_ADDED', { bookAdded: newBook })
       return newBook
     },
     editAuthor: async (_root, args, { currentUser }) => {
@@ -203,6 +206,12 @@ const resolvers = {
       return author
     },
   },
+
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED']),
+    },
+  },
 }
 
 const server = new ApolloServer({
@@ -218,6 +227,7 @@ const server = new ApolloServer({
   },
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })

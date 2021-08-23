@@ -13,12 +13,12 @@ const Rating = [
   },
 ];
 
-interface Rate {
+export interface Rate {
   value: number;
   description: string;
 }
 
-interface Result {
+export interface Result {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -27,23 +27,19 @@ interface Result {
   average: number;
 }
 
-interface Input {
+export interface Input {
   daily_exercises: Array<number>;
   target: number;
 }
 
-const parseArgumentsExercise = (args: Array<string>): Input => {
-  if (args.length < 4) throw new Error('Not enough arguments');
-  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
-    return {
-      daily_exercises: args.slice(3, args.length).map((s) => Number(s)),
-      target: Number(args[2]),
-    };
-  } else {
-    throw new Error('Provided values were not numbers!');
-  }
+const calculateBMI = (height: number, weight: number): string => {
+  if (isNaN(height) || isNaN(weight))
+    throw new Error('Mal-formatted parameters');
+  const bmi: number = weight / Math.pow(height / 100, 2);
+  if (bmi < 16) return 'Underweight';
+  else if (bmi >= 18.5 && bmi <= 24.9) return 'Normal (healthy weight)';
+  else return 'Overweight';
 };
-
 const calculateExercise = ({ daily_exercises, target }: Input): Result => {
   const average =
     daily_exercises.reduce((sum, current) => sum + current, 0) /
@@ -63,9 +59,6 @@ const calculateExercise = ({ daily_exercises, target }: Input): Result => {
   };
 };
 
-try {
-  const input: Input = parseArgumentsExercise(process.argv);
-  console.log(calculateExercise(input));
-} catch (error) {
-  if (error instanceof Error) console.log(error.message);
-}
+const calculate = { calculateBMI, calculateExercise };
+
+export default calculate;

@@ -21,7 +21,8 @@ const isGender = (param: any): param is Gender => {
 };
 
 const parseName = (name: unknown): string => {
-  if (!name || !isString(name)) throw new Error('Incorrect or missing name');
+  if (!name || !isString(name))
+    throw new Error('Incorrect or missing name: ' + name);
   return name;
 };
 
@@ -45,7 +46,7 @@ const parseOccupation = (occupation: unknown): string => {
 
 const parseSsn = (ssn: unknown): string => {
   if (!ssn || !isString(ssn) || !ssn.includes('-'))
-    throw new Error('Incorrect or missing ssn');
+    throw new Error('Incorrect or missing ssn: ' + ssn);
   return ssn;
 };
 

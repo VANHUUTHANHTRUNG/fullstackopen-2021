@@ -12,7 +12,7 @@ const Rating = [
     value: 3,
     description: 'better than expected'
   }
-]
+];
 
 interface Rate {
   value: number;
@@ -39,19 +39,19 @@ const parseArgumentsExercise = (args: Array<string>) : Input => {
     return {
       trainingHours: args.slice(3,args.length).map(s => Number(s)),
       target: Number (args[2])
-    }
+    };
   } else {
     throw new Error('Provided values were not numbers!');
   }
-}
+};
 
 const exerciseCal = ({trainingHours, target}: Input) : Result => {
   const average = trainingHours.reduce((sum, current) => sum + current, 0)/ trainingHours.length;
   const finished = average / target;
   let rating;
-  if(finished < 0.75) rating = Rating[0]
-  else if( 0.75 <= finished && finished < 1) rating = Rating[1]  
-  else rating = Rating[2]
+  if(finished < 0.75) rating = Rating[0];
+  else if( 0.75 <= finished && finished < 1) rating = Rating[1];
+  else rating = Rating[2];
   return {
     periodLength: trainingHours.length,
     trainingDays: trainingHours.filter(hour => hour > 0).length,
@@ -59,14 +59,14 @@ const exerciseCal = ({trainingHours, target}: Input) : Result => {
     rating,
     target,
     average,
-  }
-}
+  };
+};
 
 try {
-  const input : Input = parseArgumentsExercise(process.argv)
+  const input : Input = parseArgumentsExercise(process.argv);
   
   console.log(exerciseCal(input));
 }
 catch(error){
-  console.log(error.message)
+  if(error instanceof Error) console.log(error.message);
 }

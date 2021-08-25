@@ -1,13 +1,13 @@
-import React from "react";
-import axios from "axios";
-import { Container, Table, Button } from "semantic-ui-react";
+import React from 'react';
+import axios from 'axios';
+import { Container, Table, Button } from 'semantic-ui-react';
 
-import { PatientFormValues } from "../AddPatientModal/AddPatientForm";
-import AddPatientModal from "../AddPatientModal";
-import { Patient } from "../types";
-import { apiBaseUrl } from "../constants";
-import HealthRatingBar from "../components/HealthRatingBar";
-import { useStateValue } from "../state";
+import { PatientFormValues } from '../AddPatientModal/AddPatientForm';
+import AddPatientModal from '../AddPatientModal';
+import { Patient } from '../types';
+import { apiBaseUrl } from '../constants';
+import HealthRatingBar from '../components/HealthRatingBar';
+import { useStateValue } from '../state';
 
 const PatientListPage = () => {
   const [{ patients }, dispatch] = useStateValue();
@@ -28,17 +28,22 @@ const PatientListPage = () => {
         `${apiBaseUrl}/patients`,
         values
       );
-      dispatch({ type: "ADD_PATIENT", payload: newPatient });
+      dispatch({ type: 'ADD_PATIENT', payload: newPatient });
       closeModal();
     } catch (e) {
-      console.error(e.response?.data || 'Unknown Error');
-      setError(e.response?.data?.error || 'Unknown error');
+      if (axios.isAxiosError(e)) {
+        console.error(e.response?.data || 'Unknown Error');
+        setError(e.response?.data?.error || 'Unknown error');
+      } else {
+        console.error('Not Axios Error');
+        setError('Not Axios error');
+      }
     }
   };
 
   return (
-    <div className="App">
-      <Container textAlign="center">
+    <div className='App'>
+      <Container textAlign='center'>
         <h3>Patient list</h3>
       </Container>
       <Table celled>

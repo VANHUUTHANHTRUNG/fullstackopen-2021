@@ -1,5 +1,6 @@
+import { Entry } from './../../frontend/src/types';
 import { Patient } from './../../backend/src/types';
-import { NewPatientEntry, Gender, Entry } from './types';
+import { NewPatientEntry, Gender } from './types';
 type Fields = {
   id?: unknown;
   name: unknown;

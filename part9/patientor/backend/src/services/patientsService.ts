@@ -1,13 +1,14 @@
 import { v1 as uuid } from 'uuid';
-import patientsData from '../../data/patients.json';
-import { PublicPatient, NewPatientEntry, Patient } from '../types';
+import patientsData from '../../data/patients';
+import { NewPatientEntry, Patient } from '../types';
 import { loadPatientsJSON } from '../utils';
 const patients: Patient[] = loadPatientsJSON(patientsData);
-const getPatients = (): PublicPatient[] => {
+const getPatients = (): Patient[] => {
   return patients.map(
-    ({ id, name, dateOfBirth, gender, occupation, entries }) => ({
+    ({ id, name, dateOfBirth, gender, occupation, entries, ssn }) => ({
       id,
       name,
+      ssn,
       dateOfBirth,
       gender,
       occupation,

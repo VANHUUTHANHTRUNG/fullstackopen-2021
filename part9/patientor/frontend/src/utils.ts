@@ -1,5 +1,6 @@
 import { Gender } from './types';
 import { SemanticICONS } from 'semantic-ui-react';
+
 export const genderToIconName = (gender: Gender): SemanticICONS => {
   switch (gender) {
     case 'male':
@@ -9,4 +10,10 @@ export const genderToIconName = (gender: Gender): SemanticICONS => {
     default:
       return 'other gender';
   }
+};
+
+export const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
 };

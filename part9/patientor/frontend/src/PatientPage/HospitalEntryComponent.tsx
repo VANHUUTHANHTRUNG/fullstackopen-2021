@@ -2,6 +2,7 @@ import React from 'react';
 import { Icon, Segment, SegmentGroup } from 'semantic-ui-react';
 import Diagnosis from '../components/Diagnosis';
 import DischargeComponent from '../components/DischargeComponent';
+import Specialist from '../components/Specialist';
 import { HospitalEntry } from '../types';
 
 const HospitalEntryComponent = ({
@@ -26,6 +27,7 @@ const HospitalEntryComponent = ({
           <DischargeComponent discharge={entry.discharge} />
         </Segment>
       </SegmentGroup>
+      <Specialist specialist={entry.specialist} />
     </Segment>
   );
 };

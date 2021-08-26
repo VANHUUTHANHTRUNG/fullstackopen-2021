@@ -1,5 +1,3 @@
-import { Diagnose } from './../../backend/src/types';
-
 export interface Diagnosis {
   code: string;
   name: string;
@@ -24,7 +22,7 @@ interface BaseEntry {
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnose['code']>;
+  diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
 export interface HealthCheckEntry extends BaseEntry {

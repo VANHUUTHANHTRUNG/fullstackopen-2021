@@ -15,7 +15,7 @@ const OccupationalHealthcareEntryComponent = ({
       <div>
         <h4>{entry.date}</h4>
         <span style={{ display: 'flex' }}>
-          <Icon name='handshake outline' size='big' />
+          <Icon name='handshake outline' size='huge' />
           <p>Employed by {entry.employerName}</p>
         </span>
       </div>

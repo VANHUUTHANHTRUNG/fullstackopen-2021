@@ -15,7 +15,7 @@ const HospitalEntryComponent = ({
       <div>
         <h4>{entry.date}</h4>
         <span>
-          <Icon name='hospital' size='big' />
+          <Icon name='hospital' size='huge' />
         </span>
       </div>
       <p>{entry.description}</p>

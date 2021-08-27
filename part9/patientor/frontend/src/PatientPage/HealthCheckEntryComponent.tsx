@@ -14,7 +14,7 @@ const HealthCheckEntryComponent = ({
       <div>
         <h4>{entry.date}</h4>
         <span>
-          <Icon name='calendar check outline' size='big' />
+          <Icon name='calendar check outline' size='huge' />
         </span>
       </div>
       <p>{entry.description}</p>

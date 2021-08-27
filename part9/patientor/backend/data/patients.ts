@@ -49,7 +49,7 @@ export const patients: Patient[] = [
     ],
   },
   {
-    id: 'd27736ec-f723-11e9-8f0b-362b9e155667',
+    id: '5de39ca6-070e-11ec-9a03-0242ac130003',
     name: 'Hans Gruber',
     dateOfBirth: '1970-04-25',
     ssn: '250470-555L',

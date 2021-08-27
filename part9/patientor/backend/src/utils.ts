@@ -1,6 +1,6 @@
 import { Entry } from './../../frontend/src/types';
 import { Patient } from './../../backend/src/types';
-import { NewPatientEntry, Gender } from './types';
+import { NewPatient, Gender } from './types';
 type Fields = {
   id?: unknown;
   name: unknown;
@@ -77,8 +77,8 @@ const toNewPatientEntry = ({
   gender,
   occupation,
   entries,
-}: Fields): NewPatientEntry => {
-  const newEntry: NewPatientEntry = {
+}: Fields): NewPatient => {
+  const newEntry: NewPatient = {
     name: parseName(name),
     dateOfBirth: parseDate(dateOfBirth),
     gender: parseGender(gender),

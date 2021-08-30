@@ -13,6 +13,10 @@ export type Action =
   | {
       type: 'SET_DIAGNOSIS_LIST';
       payload: Diagnosis[];
+    }
+  | {
+      type: 'ADD_ENTRY';
+      payload: Patient;
     };
 
 export const reducer = (state: State, action: Action): State => {

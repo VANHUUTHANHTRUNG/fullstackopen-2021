@@ -11,30 +11,38 @@ type Fields = {
   entries: unknown;
 };
 
-const isString = (text: unknown): text is string => {
+export const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
 
-const isDate = (date: string): boolean => {
+export const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
 };
 
-const isEntries = (array: unknown): array is Entry[] => {
+export const isEntryType = (entry: any): entry is Entry => {
+  return (
+    entry.type === 'HealthCheck' ||
+    entry.type === 'OccupationalHealthcare' ||
+    entry.type === 'Hospital'
+  );
+};
+
+export const isEntries = (array: unknown): array is Entry[] => {
   return Array.isArray(array);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isGender = (param: any): param is Gender => {
+export const isGender = (param: any): param is Gender => {
   return Object.values(Gender).includes(param);
 };
 
-const parseName = (name: unknown): string => {
+export const parseName = (name: unknown): string => {
   if (!name || !isString(name))
     throw new Error('Incorrect or missing name: ' + name);
   return name;
 };
 
-const parseDate = (date: unknown): string => {
+export const parseDate = (date: unknown): string => {
   if (!date || !isString(date) || !isDate(date))
     throw new Error('Incorrect or missing date:' + date);
   return date;
@@ -46,31 +54,31 @@ export const parseGender = (gender: unknown): Gender => {
   return gender;
 };
 
-const parseOccupation = (occupation: unknown): string => {
+export const parseOccupation = (occupation: unknown): string => {
   if (!occupation || !isString(occupation))
     throw new Error('Incorrect or missing occupation');
   return occupation;
 };
 
-const parseSsn = (ssn: unknown): string => {
+export const parseSsn = (ssn: unknown): string => {
   if (!ssn || !isString(ssn) || !ssn.includes('-'))
     throw new Error('Incorrect or missing ssn: ' + ssn);
   return ssn;
 };
 
-const parseEntries = (entries: unknown): Entry[] => {
+export const parseEntries = (entries: unknown): Entry[] => {
   if (!entries || !isEntries(entries))
     throw new Error('Incorrect or missing entries' + entries);
   return entries;
 };
 
-const parseId = (id: unknown): string => {
+export const parseId = (id: unknown): string => {
   if (!id || !isString(id) || !(id.length > 10))
     throw new Error('Incorrect or missing id' + id);
   return id;
 };
 
-const toNewPatientEntry = ({
+export const toNewPatient = ({
   name,
   dateOfBirth,
   ssn,
@@ -105,4 +113,4 @@ export const loadPatientsJSON = (patientsJSON: Fields[]): Patient[] => {
   return patients;
 };
 
-export default toNewPatientEntry;
+export default toNewPatient;

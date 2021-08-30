@@ -56,3 +56,10 @@ export const setDiagnosisList = (diagnosis: Diagnosis[]): Action => {
     payload: diagnosis,
   };
 };
+
+export const addEntry = (newEntry: Patient): Action => {
+  return {
+    type: 'ADD_ENTRY',
+    payload: newEntry,
+  };
+};

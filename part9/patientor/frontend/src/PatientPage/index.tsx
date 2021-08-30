@@ -1,6 +1,8 @@
 import React from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import { Icon, Container, SegmentGroup } from 'semantic-ui-react';
+import { Icon, Container, SegmentGroup, Button } from 'semantic-ui-react';
+import AddEntryModal from '../AddEntryModal';
+import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
 import { useStateValue } from '../state';
 import { Entry } from '../types';
 import { genderToIconName } from '../utils';
@@ -13,6 +15,17 @@ interface MatchParams {
 const PatientPage = () => {
   const [{ patients }] = useStateValue();
   const match = useRouteMatch<MatchParams>('/patients/:id');
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+  };
+
+  const submitNewEntry = (values: EntryFormValues) => {
+    console.log(values);
+  };
   const patient = match
     ? Object.values(patients).find((patient) => patient.id === match.params.id)
     : undefined;
@@ -40,6 +53,12 @@ const PatientPage = () => {
           </SegmentGroup>
         </div>
       ) : null}
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        onClose={closeModal}
+      />
+      <Button onClick={openModal}>New entry</Button>
     </div>
   ) : (
     <h3>Patient not found</h3>

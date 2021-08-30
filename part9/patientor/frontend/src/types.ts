@@ -17,13 +17,15 @@ export enum HealthCheckRating {
   'CriticalRisk' = 3,
 }
 
-interface BaseEntry {
+export interface BaseEntry {
   id: string;
   description: string;
   date: string;
   specialist: string;
   diagnosisCodes?: Array<Diagnosis['code']>;
 }
+
+export type CommonEntryInfo = Omit<BaseEntry, 'id'>;
 
 export interface HealthCheckEntry extends BaseEntry {
   type: 'HealthCheck';
